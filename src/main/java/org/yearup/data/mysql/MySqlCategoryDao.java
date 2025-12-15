@@ -6,10 +6,7 @@ import org.yearup.data.CategoryDao;
 import org.yearup.models.Category;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,20 +69,68 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
 
     @Override
     public Category create(Category category)
-    {
+    { String query = """
+        INSERT INTO categories (name, description)
+        VALUES (?, ?)
+        """;
+
+        try(Connection connection = getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(query,  PreparedStatement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setString(1, category.getName());
+            preparedStatement.setString(2, category.getDescription());
+            preparedStatement.executeUpdate();
+
+            try(ResultSet keys = preparedStatement.getGeneratedKeys()){
+                if (keys.next()){
+                    category.setCategoryId(keys.getInt(1));
+                }
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
         // create a new category
-        return null;
+        return category;
     }
 
     @Override
     public void update(int categoryId, Category category)
-    {
+    { String query = """
+            UPDATE categories
+            SET name=?, description=?
+            WHERE category_id=?
+            """;
+
+        try(Connection connection = getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);{
+
+                preparedStatement.setString(1, category.getName());
+                preparedStatement.setString(2, category.getDescription());
+                preparedStatement.setInt(3, categoryId);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         // update category
     }
 
     @Override
     public void delete(int categoryId)
-    {
+    { String query = """
+            DELETE FROM categories
+            WHERE category_id=?
+            """;
+
+        try(Connection connection = getConnection()) {
+        PreparedStatement preparedStatement = connection.prepareStatement(query); {
+
+                preparedStatement.setInt(1, categoryId);
+                preparedStatement.executeUpdate();
+            }
+            }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
         // delete category
     }
 

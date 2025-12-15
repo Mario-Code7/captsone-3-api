@@ -16,7 +16,7 @@ import java.util.List;
     // http://localhost:8080/categories
 // add annotation to allow cross site origin requests
 @RestController
-@RequestMapping(path="/catergories")
+@RequestMapping("/categories")
 @CrossOrigin
 public class CategoriesController
 {
@@ -39,7 +39,7 @@ public class CategoriesController
     }
 
     // add the appropriate annotation for a get action
-    @GetMapping(path="/{categoryId}")
+    @GetMapping("/{categoryId}")
     public Category getById(@PathVariable int categoryId)
     {
         // get the category by id
@@ -48,7 +48,7 @@ public class CategoriesController
 
     // the url to return all products in category 1 would look like this
     // https://localhost:8080/categories/1/products
-    @GetMapping("{categoryId}/products")
+    @GetMapping("/{categoryId}/products")
     public List<Product> getProductsById(@PathVariable int categoryId)
     {
         // get a list of product by categoryId
@@ -57,7 +57,7 @@ public class CategoriesController
 
     // add annotation to call this method for a POST action
     // add annotation to ensure that only an ADMIN can call this function
-    @PostMapping("/{id}")
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public Category addCategory(@RequestBody Category category)
     {
