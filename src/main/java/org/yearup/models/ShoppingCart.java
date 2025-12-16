@@ -28,6 +28,11 @@ public class ShoppingCart
         items.put(item.getProductId(), item);
     }
 
+    public void addItem(Product product, int quantity) {
+        ShoppingCartItem item = new ShoppingCartItem(product, quantity);
+        items.put(item.getProductId(), item);
+    }
+
     public ShoppingCartItem get(int productId)
     {
         return items.get(productId);

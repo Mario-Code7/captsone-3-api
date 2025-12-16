@@ -10,6 +10,11 @@ public class ShoppingCartItem
     private int quantity = 1;
     private BigDecimal discountPercent = BigDecimal.ZERO;
 
+    public ShoppingCartItem(Product product, int quantity) {
+        this.product = product;
+        this.quantity = quantity;
+    }
+
 
     public Product getProduct()
     {
@@ -41,7 +46,6 @@ public class ShoppingCartItem
         this.discountPercent = discountPercent;
     }
 
-    @JsonIgnore
     public int getProductId()
     {
         return this.product.getProductId();
