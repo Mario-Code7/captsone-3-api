@@ -44,4 +44,54 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
         }
     }
 
+    @Override
+    public Profile getUserById(int id) {
+
+        String query = "SELECT * FROM profiles WHERE user_id = ?";
+
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, id);
+            ResultSet set = preparedStatement.executeQuery();
+
+            if (set.next()) {
+                return mapRow(set);
+            }
+            return null;
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void update(Profile profile) {
+        String query = "UPDATE profiles" +
+                "SET first_name = ?, last_name = ?, phone = ?, email = ? " +
+                "WHERE user_id = ?";
+
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, profile.getFirstName());
+            preparedStatement.setString(2, profile.getLastName());
+            preparedStatement.setString(3, profile.getPhone());
+            preparedStatement.setString(4, profile.getEmail());
+
+            preparedStatement.executeUpdate();
+
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private Profile mapRow(ResultSet rs) throws SQLException {
+        Profile profile = new Profile();
+        profile.setUserId(rs.getInt("user_id"));
+        profile.setFirstName(rs.getString("first_name"));
+        profile.setLastName(rs.getString("last_name"));
+        profile.setPhone(rs.getString("phone"));
+        profile.setEmail(rs.getString("email"));
+        return profile;
+    }
+
 }

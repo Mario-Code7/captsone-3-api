@@ -51,7 +51,7 @@ public class ShoppingCartController {
         }
     }
     @PostMapping("/products/{productId}")
-    public void addProduct(@PathVariable int productId, Principal principal) {
+    public ShoppingCart addProduct(@PathVariable int productId, Principal principal) {
         try{
             User user = getCurrentUser(principal);
             Product product = productDao.getById(productId);
@@ -63,16 +63,16 @@ public class ShoppingCartController {
             if (shoppingCartDao.containsProduct(user.getId(), productId)) {
                 shoppingCartDao.plusQuantity(user.getId(), productId, 1);
             } else {
-                shoppingCartDao.plusQuantity(user.getId(), productId, 1);
+                shoppingCartDao.addProduct(user.getId(), productId, 1);
             }
-
-            shoppingCartDao.addProduct(user.getId(), productId, 1);
+            return shoppingCartDao.getByUserId(user.getId());
         }catch(Exception e){
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
     @PutMapping("/products/{productId}")
-    public void updateProduct(@PathVariable int productId, @RequestBody ShoppingCartItem shoppingCartItem, Principal principal) {
+    public ShoppingCart updateProduct(@PathVariable int productId, @RequestBody ShoppingCartItem shoppingCartItem, Principal principal) {
         try {
             User user = getCurrentUser(principal);
 
@@ -80,16 +80,20 @@ public class ShoppingCartController {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
             }
             shoppingCartDao.updateQuantity(user.getId(), productId, shoppingCartItem.getQuantity());
+
+            return shoppingCartDao.getByUserId(user.getId());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
 
     @DeleteMapping
-    public void clearCart(Principal principal) {
+    public ShoppingCart clearCart(Principal principal) {
         try {
             User user = getCurrentUser(principal);
             shoppingCartDao.clearCart(user.getId());
+
+            return shoppingCartDao.getByUserId(user.getId());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }

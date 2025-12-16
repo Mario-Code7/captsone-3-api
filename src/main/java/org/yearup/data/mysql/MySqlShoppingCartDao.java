@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import org.yearup.data.ShoppingCartDao;
 import org.yearup.models.Product;
 import org.yearup.models.ShoppingCart;
+import org.yearup.models.ShoppingCartItem;
 
 
 import javax.sql.DataSource;
@@ -40,7 +41,8 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
                 Product product = MySqlProductDao.mapRow(rs);
                 int quantity = rs.getInt("quantity");
 
-                cart.addItem(product, quantity);
+                ShoppingCartItem  item = new ShoppingCartItem(product, quantity);
+                cart.add(item);
             }
         }
         catch (SQLException e)
@@ -93,6 +95,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
