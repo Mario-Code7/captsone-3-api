@@ -8,5 +8,5 @@ public interface ProfileDao {
 
     Profile getUserById(int id);
 
-    void update(Profile profile);
+    void update(int id, Profile profile);
 }

@@ -57,7 +57,7 @@ public class ShoppingCartController {
             Product product = productDao.getById(productId);
 
             if(product == null){
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Oops... our bad.");
             }
 
             if (shoppingCartDao.containsProduct(user.getId(), productId)) {

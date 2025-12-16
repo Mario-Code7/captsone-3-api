@@ -104,7 +104,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     public void plusQuantity(int userId, int productId, int quantity) {
         String sql = """
             UPDATE shopping_cart
-            SET quantity = quantity + 1
+            SET quantity = quantity + ?
             WHERE user_id = ? AND product_id = ?
             """;
 
