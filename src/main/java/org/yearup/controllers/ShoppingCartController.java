@@ -50,7 +50,7 @@ public class ShoppingCartController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
-    @PostMapping("/products/{productId}")
+    @PostMapping("/{productId}")
     public ShoppingCart addProduct(@PathVariable int productId, Principal principal) {
         try{
             User user = getCurrentUser(principal);

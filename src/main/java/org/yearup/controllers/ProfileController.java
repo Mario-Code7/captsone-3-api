@@ -22,7 +22,10 @@ public class ProfileController {
     public ProfileController(ProfileDao profileDao, UserDao userDao) {
         this.profileDao = profileDao;
         this.userDao = userDao;
-    }@GetMapping
+    }
+
+
+   @GetMapping
    public Profile getProfile(Principal principal) {
         User user = getCurrentUser(principal);
         Profile profile = profileDao.getUserById(user.getId());
