@@ -43,13 +43,15 @@ public class ShoppingCartController {
             // find database user by userId
 
             return shoppingCartDao.getByUserId(user.getId());
-
-            // use the shoppingcartDao to get all items in the cart and return the cart
+        } catch (ResponseStatusException e) {
+            throw e;
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
+        // use the shoppingcartDao to get all items in the cart and return the cart
     }
     @PostMapping("/products/{productId}")
+    @ResponseStatus(HttpStatus.CREATED)
     public ShoppingCart addProduct(@PathVariable int productId, Principal principal) {
         try{
             User user = getCurrentUser(principal);
@@ -93,10 +95,12 @@ public class ShoppingCartController {
             shoppingCartDao.clearCart(user.getId());
 
             return shoppingCartDao.getByUserId(user.getId());
+        } catch (ResponseStatusException e) {
+            throw e;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
-    }
+}
 
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be added

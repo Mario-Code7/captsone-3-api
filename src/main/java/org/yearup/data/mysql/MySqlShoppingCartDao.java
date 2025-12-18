@@ -23,7 +23,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     {
         ShoppingCart cart = new ShoppingCart();
 
-        String sql = """
+        String query = """
             SELECT p.*, sc.quantity
             FROM shopping_cart sc
             JOIN products p ON sc.product_id = p.product_id
@@ -31,7 +31,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
             """;
 
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql))
+             PreparedStatement statement = connection.prepareStatement(query))
         {
             statement.setInt(1, userId);
             ResultSet rs = statement.executeQuery();
@@ -56,14 +56,14 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     @Override
     public boolean containsProduct(int userId, int productId)
     {
-        String sql = """
+        String query = """
             SELECT COUNT(*)
             FROM shopping_cart
             WHERE user_id = ? AND product_id = ?
             """;
 
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql))
+             PreparedStatement statement = connection.prepareStatement(query))
         {
             statement.setInt(1, userId);
             statement.setInt(2, productId);
@@ -110,9 +110,9 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql))
-        {
-            statement.setInt(1, userId);
-            statement.setInt(2, productId);
+        {   statement.setInt(1, quantity);
+            statement.setInt(2, userId);
+            statement.setInt(3, productId);
             statement.executeUpdate();
         }
         catch (SQLException e)
