@@ -1,14 +1,15 @@
 package org.yearup.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.yearup.data.CategoryDao;
 import org.yearup.data.ProductDao;
 import org.yearup.models.Category;
 import org.yearup.models.Product;
 
-import java.util.ArrayList;
 import java.util.List;
 
 // add the annotations to make this a REST controller
@@ -16,12 +17,12 @@ import java.util.List;
     // http://localhost:8080/categories
 // add annotation to allow cross site origin requests
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("categories")
 @CrossOrigin
 public class CategoriesController
 {
-    private CategoryDao categoryDao;
-    private ProductDao productDao;
+    private final CategoryDao categoryDao;
+    private final ProductDao productDao;
     @Autowired
     public CategoriesController(CategoryDao categoryDao, ProductDao productDao) {
         this.categoryDao = categoryDao;
@@ -31,7 +32,7 @@ public class CategoriesController
 // create an Autowired controller to inject the categoryDao and ProductDao
 
     // add the appropriate annotation for a get action
-    @GetMapping
+    @GetMapping("")
     public List<Category> getAllCategories()
     {
         // find and return all categories
@@ -39,11 +40,14 @@ public class CategoriesController
     }
 
     // add the appropriate annotation for a get action
-    @GetMapping("/{categoryId}")
-    public Category getById(@PathVariable int categoryId)
-    {
+    @GetMapping("/{id}")
+    public Category getById(@PathVariable int id)
+    { Category category = categoryDao.getById(id);
         // get the category by id
-        return  categoryDao.getById(categoryId);
+        if (category == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
+
+        return category;
     }
 
     // the url to return all products in category 1 would look like this
@@ -59,16 +63,17 @@ public class CategoriesController
     // add annotation to ensure that only an ADMIN can call this function
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.CREATED)
     public Category addCategory(@RequestBody Category category)
     {
+            return categoryDao.create(category);
         // insert the category
-        return categoryDao.create(category);
     }
 
     // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
     // add annotation to ensure that only an ADMIN can call this function
     @PutMapping("/{id}")
-    @PreAuthorize("hasROle('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void updateCategory(@PathVariable int id, @RequestBody Category category)
     {
         // update the category by id
@@ -80,9 +85,13 @@ public class CategoriesController
     // add annotation to ensure that only an ADMIN can call this function
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable int id)
     {
         // delete the category by id
-        categoryDao.delete(id);
+            Category category = categoryDao.getById(id);
+            if (category == null)
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
+            categoryDao.delete(id);
     }
 }

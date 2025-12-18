@@ -14,7 +14,6 @@ import org.yearup.models.ShoppingCartItem;
 import org.yearup.models.User;
 
 import java.security.Principal;
-import java.sql.SQLException;
 
 // convert this class to a REST controller
 // only logged in users should have access to these actions
@@ -24,9 +23,9 @@ import java.sql.SQLException;
 @PreAuthorize("isAuthenticated()")
 public class ShoppingCartController {
     // a shopping cart requires
-    private ShoppingCartDao shoppingCartDao;
-    private UserDao userDao;
-    private ProductDao productDao;
+    private final ShoppingCartDao shoppingCartDao;
+    private final UserDao userDao;
+    private final ProductDao productDao;
 
     @Autowired
     public ShoppingCartController(ShoppingCartDao shoppingCartDao, UserDao userDao, ProductDao productDao) {
@@ -50,7 +49,7 @@ public class ShoppingCartController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
-    @PostMapping("/{productId}")
+    @PostMapping("/products/{productId}")
     public ShoppingCart addProduct(@PathVariable int productId, Principal principal) {
         try{
             User user = getCurrentUser(principal);

@@ -16,8 +16,8 @@ import java.security.Principal;
 @PreAuthorize("isAuthenticated")
 @CrossOrigin
 public class ProfileController {
-    private ProfileDao profileDao;
-    private UserDao userDao;
+    private final ProfileDao profileDao;
+    private final UserDao userDao;
 
     public ProfileController(ProfileDao profileDao, UserDao userDao) {
         this.profileDao = profileDao;
