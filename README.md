@@ -1,4 +1,4 @@
-# E-Commerce API and Site
+# Videogamestore E-Commerce API and Site
 
 This Capstone 3 project is a Spring Boot API for a simple e-commerce application. It allows users to manage products, shopping carts, profiles, and orders.
 
@@ -46,7 +46,7 @@ This Capstone 3 project is a Spring Boot API for a simple e-commerce application
 
 ---
 
-### 4. **Orders / Checkout**
+### 4. **Orders / Checkout**(Future goal)
 - Convert a user's shopping cart into an order.
 - Each order includes shipping details and items from the cart.
 - Order totals are calculated from the shopping cart.
@@ -75,7 +75,7 @@ This Capstone 3 project is a Spring Boot API for a simple e-commerce application
 ### Profiles
 - `profiles`: `user_id`, `first_name`, `last_name`, `phone`, `email`, `address`, `city`, `state`, `zip`
 
-### Orders
+### Orders(Future goal)
 - `orders`: `order_id`, `user_id`, `date`, `address`, `city`, `state`, `zip`, `shipping_amount`
 - `order_line_items`: `order_line_item_id`, `order_id`, `product_id`, `sales_price`, `quantity`, `discount`
 
@@ -104,7 +104,7 @@ This Capstone 3 project is a Spring Boot API for a simple e-commerce application
    - URL: `http://localhost:8080/cart`
    - Method: DELETE
 
-### Orders / Checkout
+### Orders / Checkout (Future goal)
 - URL: `http://localhost:8080/orders`
 - Method: POST
 - Body: None
